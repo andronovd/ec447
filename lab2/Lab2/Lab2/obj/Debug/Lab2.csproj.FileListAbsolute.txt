@@ -1,0 +1,9 @@
+C:\Documents\School\current\ec447\lab2\Lab2\Lab2\bin\Debug\Lab2.exe.config
+C:\Documents\School\current\ec447\lab2\Lab2\Lab2\obj\Debug\Lab2.csprojResolveAssemblyReference.cache
+C:\Documents\School\current\ec447\lab2\Lab2\Lab2\obj\Debug\Lab2.Form1.resources
+C:\Documents\School\current\ec447\lab2\Lab2\Lab2\obj\Debug\Lab2.Properties.Resources.resources
+C:\Documents\School\current\ec447\lab2\Lab2\Lab2\obj\Debug\Lab2.csproj.GenerateResource.Cache
+C:\Documents\School\current\ec447\lab2\Lab2\Lab2\bin\Debug\Lab2.exe
+C:\Documents\School\current\ec447\lab2\Lab2\Lab2\bin\Debug\Lab2.pdb
+C:\Documents\School\current\ec447\lab2\Lab2\Lab2\obj\Debug\Lab2.exe
+C:\Documents\School\current\ec447\lab2\Lab2\Lab2\obj\Debug\Lab2.pdb
