@@ -1,1 +1,10 @@
 C:\Documents\current\ec447\Lab3\Lab3\bin\Debug\Lab3.exe.config
+C:\Documents\School\current\ec447\Lab3\Lab3\bin\Debug\Lab3.exe.config
+C:\Documents\School\current\ec447\Lab3\Lab3\obj\Debug\Lab3.csprojResolveAssemblyReference.cache
+C:\Documents\School\current\ec447\Lab3\Lab3\obj\Debug\Lab3.Form1.resources
+C:\Documents\School\current\ec447\Lab3\Lab3\obj\Debug\Lab3.Properties.Resources.resources
+C:\Documents\School\current\ec447\Lab3\Lab3\obj\Debug\Lab3.csproj.GenerateResource.Cache
+C:\Documents\School\current\ec447\Lab3\Lab3\bin\Debug\Lab3.exe
+C:\Documents\School\current\ec447\Lab3\Lab3\bin\Debug\Lab3.pdb
+C:\Documents\School\current\ec447\Lab3\Lab3\obj\Debug\Lab3.exe
+C:\Documents\School\current\ec447\Lab3\Lab3\obj\Debug\Lab3.pdb
