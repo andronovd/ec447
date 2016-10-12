@@ -24,14 +24,15 @@ namespace Lab4
             this.Size = new Size(600, 600);
             //populate the squares array with squares
             short i = 0;
-            bool border = false;
+            bool border;
             for (; i < total; i++)
             {
-                if( ((i % 8) == 0) || ( i < 8 ) || i > 55 || (i%8 == 7))
+                border = false;
+                if( ((i % 8) == 0) || ( i < 7 ) || i > 55 || (i%8 == 7))
                 {
-                    Console.WriteLine("Square No." + i.ToString() + " is a border square.");
                     border = true;
                 }
+
                 Square s = new Square( border);
                 squares.Add(s);
             }
@@ -46,7 +47,7 @@ namespace Lab4
             pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Outset; //alignment of the border
             Font f = new Font("Arial", 30, FontStyle.Bold);
             
-            for( short i = 0; i < 8; i++ )
+            for( short i = 0; i < 7; i++ )
             {
                 for( short j = 0; j < size; j++ )
                 {
@@ -57,15 +58,18 @@ namespace Lab4
                     //if color is 0
                     SolidBrush fill = new SolidBrush( Color.White );
                     SolidBrush Q = new SolidBrush(Color.Black);
-                    if (s.color == 1)
+
+                    if (s.inRange == true)
+                    {
+                        fill.Color = Color.Red;
+                        s.color = 2;
+                    }
+                    else if (s.color == 1)
                     {
                         fill.Color = Color.Black;
                         Q.Color = Color.White;
                     }
-                    else if( s.color == 2 & s.inRange)
-                    {
-                        fill.Color = Color.Red;
-                    }
+                    
                     g.FillRectangle(fill, r);
 
                     //Draw in the Queens
@@ -130,9 +134,9 @@ namespace Lab4
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
             short elem;
-            if (isSquare(e))
+            if (isSquare(e.X, e.Y))
             {
-                elem = whichSquare(e);
+                elem = whichSquare(e.X, e.Y);
                 Square s = (Square)squares[elem];
                 if (e.Button == MouseButtons.Left)
                 {
@@ -148,12 +152,9 @@ namespace Lab4
             }
         }
 
-        public bool isSquare(MouseEventArgs e)
+        public bool isSquare( double x, double y)
         {
             //checks if the button clicked on a square
-            //get the coord. of where the mouse clicked
-            double x = e.X;
-            double y = e.Y;
             //Console.WriteLine("You clicked at (" + x.ToString() + ", " + y.ToString() + ").");
             //see if mouse clicked on the board
             bool xValid = (x > 99) & (x < 501);
@@ -167,11 +168,9 @@ namespace Lab4
             return false;
         }
 
-        public short whichSquare( MouseEventArgs e)
+        public short whichSquare( double x, double y)
         {
             //returns the element of the square tile on the board that was clicked in the squares arraylist
-            double x = e.X;
-            double y = e.Y;
             x = Math.Floor((x - 100) / 50);
             y = Math.Floor((y - 100) / 50);
             short elem = (short)(size * y + x);
@@ -188,109 +187,132 @@ namespace Lab4
             //diagonal 1 -> +/- 9
             //diagonal 2 -> +/- 7
             ArrayList elems = new ArrayList();
-            short temp = elem;
 
-            //check up
-            while( true )
-            {
-                if( ((Square)squares[temp]).isBorder )
-                {
-                    break;
-                }
-                temp += 5;
-                elems.Add(temp);
-            }
+            //unpack elem
+            short j = (short)(elem % 8);
+            short i= (short)((elem - j)/8);
+            short ti = i;
+            short tj = j;
+            short sum;
 
-            //check down
-            temp = elem;
-            while( true )
-            {
-                if (((Square)squares[temp]).isBorder)
-                {
-                    break;
-                }
-                temp -= 5;
-                elems.Add(temp);
-            }
-
-            //check left
-            temp = elem;
-            while( true )
-            {
-                if (((Square)squares[temp]).isBorder)
-                {
-                    break;
-                }
-                temp -= 1;
-                elems.Add(temp);
-            }
-
-            //check right
-            temp = elem;
-            while( true )
-            {
-                if (((Square)squares[temp]).isBorder)
-                {
-                    break;
-                }
-                temp += 1;
-                elems.Add(temp);
-            }
-
-            //check up & right
-            temp = elem;
-            while( true )
-            {
-                if (((Square)squares[temp]).isBorder)
-                {
-                    break;
-                }
-                temp -=7;
-                elems.Add(temp);
-            }
-
-            //check down & left
-            temp = elem;
-            while( true )
-            {
-                if (((Square)squares[temp]).isBorder)
-                {
-                    break;
-                }
-                temp += 7;
-                elems.Add(temp);
-            }
+            Console.WriteLine("elem selected is at " + i.ToString() + ", " + j.ToString());
 
             //check up & left
-            temp = elem;
-            while( true )
+            Console.WriteLine("Checking diagonals");
+            while( ti > 0 && tj > 0 )
             {
-                if (((Square)squares[temp]).isBorder)
-                {
-                    break;
-                }
-                temp -= 9;
-                elems.Add(temp);
+                ti--;
+                tj--;
+                sum = (short)(8 * ti + tj);
+                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                elems.Add(sum);
+                
             }
 
-            //check down & right
-            temp = elem;
-            while( true )
+            ti = i;
+            tj = j;
+            //check up & right
+            while(ti > 0 && tj < 7)
             {
-                if (((Square)squares[temp]).isBorder)
-                {
-                    break;
-                }
-                temp += 7;
-                elems.Add(temp);
+                ti--;
+                tj++;
+                sum = (short)(8 * ti + tj);
+                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                elems.Add(sum);
+                
             }
+
+            ti = i;
+            tj = j;
+            //check down & left
+            while (ti < 7 && tj > 0 )
+            {
+                ti++;
+                tj--;
+                sum = (short)(8 * ti + tj);
+                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                elems.Add(sum);
+                
+            }
+
+            ti = i;
+            tj = j;
+            //check down & right
+            while (ti < 7 && tj < 7)
+            {
+                ti++;
+                tj++;
+                sum = (short)(8 * ti + tj);
+                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                elems.Add(sum);
+                
+            }
+
+            ti = i;
+            tj = j;
+            Console.WriteLine("Checking axes");
+            //check up
+            while (tj > 0)
+            {
+                tj--;
+                sum = (short)(8 * ti + tj);
+                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                elems.Add(sum);
+                
+            }
+
+            ti = i;
+            tj = j;
+            //check down
+            while (tj < 7)
+            {
+                tj++;
+                sum = (short)(8 * ti + tj);
+                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                elems.Add(sum);
+                
+            }
+
+            ti = i;
+            tj = j;
+            //check left
+            while ( ti > 0 )
+            {
+                ti--;
+                sum = (short)(8 * ti + tj);
+                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                elems.Add(sum);
+                
+            }
+
+            ti = i;
+            tj = j;
+            //check right
+            while (ti < 7)
+            {
+                ti++;
+                sum = (short)(8 * ti + tj);
+                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                elems.Add(sum);
+                
+            }
+
 
             //now elems should contain all the elements of those square that are in the queen's range.
             Console.WriteLine("found " + elems.Capacity.ToString() + " elements in range.");
+            foreach( short s in elems)
+            {
+                Console.Write(s);
+                Console.Write(" ");
+            }
+            Console.WriteLine();
+            
             foreach( short s in elems )
             {
                 ((Square)squares[s]).inRange = true;
             }
+            elems.Clear();
+            Invalidate();
         }
     }
 }
