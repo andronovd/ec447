@@ -14,8 +14,11 @@ namespace Lab4
     public partial class Form1 : Form
     {
         private ArrayList squares = new ArrayList();
+        private ArrayList queens = new ArrayList(); //holds the index of the square that contains a queen in the above 'squares' ArrayList.
+        private short numQueens = 0; //number of queens
         private short size = 8;     //squares to a side
         private short total = 64;   //total squares
+        private bool hints = false; //hints, default is off.
 
         public Form1()
         {
@@ -46,8 +49,10 @@ namespace Lab4
             Pen pen = new Pen(Color.Black, 2); //pen for drawing the border
             pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Outset; //alignment of the border
             Font f = new Font("Arial", 30, FontStyle.Bold);
-            
-            for( short i = 0; i < 7; i++ )
+            SolidBrush fill = new SolidBrush(Color.White);
+            SolidBrush Q = new SolidBrush(Color.Black);
+
+            for ( short i = 0; i < 7; i++ )
             {
                 for( short j = 0; j < size; j++ )
                 {
@@ -56,13 +61,12 @@ namespace Lab4
                     Square s = (Square)squares[size * i + j];
 
                     //if color is 0
-                    SolidBrush fill = new SolidBrush( Color.White );
-                    SolidBrush Q = new SolidBrush(Color.Black);
+                    fill.Color = Color.White;
+                    Q.Color = Color.Black;
 
-                    if (s.inRange == true)
+                    if (s.inRange == true && hints)
                     {
                         fill.Color = Color.Red;
-                        s.color = 2;
                     }
                     else if (s.color == 1)
                     {
@@ -78,10 +82,11 @@ namespace Lab4
                         g.DrawString("Q", f, Q, r);
                     }
 
-                    fill.Dispose();
-                    Q.Dispose();
+                    
                 }
             }
+            fill.Dispose();
+            Q.Dispose();
             f.Dispose();
             pen.Dispose();
         }
@@ -96,7 +101,6 @@ namespace Lab4
             public short color;  // 0 = black, 1 = white, 2 = red
             public bool queen;   //is there a queen on it?
             public bool inRange; //is in range of a queen
-            public bool isBorder;
 
             //--static vars
             private static short numSquares = 0;
@@ -111,7 +115,6 @@ namespace Lab4
 
                 this.color = (short)((row&1) ^ (numSquares & 1));
                 this.queen = false;
-                this.isBorder = b;
                 numSquares++;
             }
 
@@ -136,18 +139,23 @@ namespace Lab4
             short elem;
             if (isSquare(e.X, e.Y))
             {
-                elem = whichSquare(e.X, e.Y);
-                Square s = (Square)squares[elem];
+                elem = whichSquare(e.X, e.Y); //get the element of the square that was clicked
+                Square s = (Square)squares[elem]; //get the square
                 if (e.Button == MouseButtons.Left)
                 {
-                    //get the element location of the square that was clicked
-                    s.placeQueen();
+                    s.placeQueen(); //put the queen on the square
+                    queens.Add(elem); // add that element to the queen's arraylist
+                    numQueens++;
+                    ChangeLabelText();
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
-                    s.removeQueen();
+                    s.removeQueen(); //remove the queen
+                    queens.Remove(elem);
+                    numQueens--;
+                    ChangeLabelText();
                 }
-                CheckQueens(elem);
+                CheckQueens(); //see which squares are in range of the queens on the board;
                 Invalidate();
             }
         }
@@ -155,7 +163,7 @@ namespace Lab4
         public bool isSquare( double x, double y)
         {
             //checks if the button clicked on a square
-            //Console.WriteLine("You clicked at (" + x.ToString() + ", " + y.ToString() + ").");
+            ////Console.WriteLine("You clicked at (" + x.ToString() + ", " + y.ToString() + ").");
             //see if mouse clicked on the board
             bool xValid = (x > 99) & (x < 501);
             bool yValid = (y > 99) & (y < 501);
@@ -177,141 +185,188 @@ namespace Lab4
             return elem;
         }
 
-        public void CheckQueens(short elem)
+        public void CheckQueens()
         {
-            //After each time a queen is placed, each sqare is checked if it
-            //is within striking range of a queen
-            //need to check 8 directions
-            //up,down -> +/- 8
-            //left,right -> +/- 1
-            //diagonal 1 -> +/- 9
-            //diagonal 2 -> +/- 7
+            
             ArrayList elems = new ArrayList();
-
-            //unpack elem
-            short j = (short)(elem % 8);
-            short i= (short)((elem - j)/8);
-            short ti = i;
-            short tj = j;
+            short j;
+            short i;
+            short ti;
+            short tj;
             short sum;
 
-            Console.WriteLine("elem selected is at " + i.ToString() + ", " + j.ToString());
-
-            //check up & left
-            Console.WriteLine("Checking diagonals");
-            while( ti > 0 && tj > 0 )
+            //first remove all squares from being in rance
+            foreach( Square s in squares )
             {
-                ti--;
-                tj--;
-                sum = (short)(8 * ti + tj);
-                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
-                elems.Add(sum);
+                s.inRange = false;
+            }
+
+
+            //check each queen
+            foreach (short elem in queens)
+            {
+                //After each time a queen is placed, each all sqares is checked if it
+                //is within striking range of a queen
+                //need to check 8 directions
+                //up,down -> +/- 8
+                //left,right -> +/- 1
+                //diagonal 1 -> +/- 9
+                //diagonal 2 -> +/- 7
+                //unpack elem
+
+                j = (short)(elem % 8);
+                i = (short)((elem - j) / 8);
+                ti = i;
+                tj = j;
+
+                ////Console.WriteLine("elem selected is at " + i.ToString() + ", " + j.ToString());
+
+                //check up & left
+                //Console.WriteLine("Checking diagonals");
+                elems.Add(elem);
+                while (ti > 0 && tj > 0)
+                {
+                    ti--;
+                    tj--;
+                    sum = (short)(8 * ti + tj);
+                    //Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                    elems.Add(sum);
+
+                }
+
+                ti = i;
+                tj = j;
+                //check up & right
+                while (ti > 0 && tj < 7)
+                {
+                    ti--;
+                    tj++;
+                    sum = (short)(8 * ti + tj);
+                    //Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                    elems.Add(sum);
+
+                }
+
+                ti = i;
+                tj = j;
+                //check down & left
+                while (ti < 7 && tj > 0)
+                {
+                    ti++;
+                    tj--;
+                    sum = (short)(8 * ti + tj);
+                    //Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                    elems.Add(sum);
+
+                }
+
+                ti = i;
+                tj = j;
+                //check down & right
+                while (ti < 7 && tj < 7)
+                {
+                    ti++;
+                    tj++;
+                    sum = (short)(8 * ti + tj);
+                    //Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                    elems.Add(sum);
+
+                }
+
+                ti = i;
+                tj = j;
+                //Console.WriteLine("Checking axes");
+                //check up
+                while (tj > 0)
+                {
+                    tj--;
+                    sum = (short)(8 * ti + tj);
+                    //Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                    elems.Add(sum);
+
+                }
+
+                ti = i;
+                tj = j;
+                //check down
+                while (tj < 7)
+                {
+                    tj++;
+                    sum = (short)(8 * ti + tj);
+                    //Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                    elems.Add(sum);
+
+                }
+
+                ti = i;
+                tj = j;
+                //check left
+                while (ti > 0)
+                {
+                    ti--;
+                    sum = (short)(8 * ti + tj);
+                    //Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                    elems.Add(sum);
+
+                }
+
+                ti = i;
+                tj = j;
+                //check right
+                while (ti < 7)
+                {
+                    ti++;
+                    sum = (short)(8 * ti + tj);
+                    //Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
+                    elems.Add(sum);
+
+                }
+
+
+                /* now elems should contain all the elements of those square that are in the queen's range.
+                //Console.WriteLine("found " + elems.Capacity.ToString() + " elements in range.");
+                foreach( short s in elems)
+                {
+                    //Console.Write(s);
+                    //Console.Write(" ");
+                }
+                //Console.WriteLine();
+                */
+
                 
             }
 
-            ti = i;
-            tj = j;
-            //check up & right
-            while(ti > 0 && tj < 7)
-            {
-                ti--;
-                tj++;
-                sum = (short)(8 * ti + tj);
-                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
-                elems.Add(sum);
-                
-            }
-
-            ti = i;
-            tj = j;
-            //check down & left
-            while (ti < 7 && tj > 0 )
-            {
-                ti++;
-                tj--;
-                sum = (short)(8 * ti + tj);
-                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
-                elems.Add(sum);
-                
-            }
-
-            ti = i;
-            tj = j;
-            //check down & right
-            while (ti < 7 && tj < 7)
-            {
-                ti++;
-                tj++;
-                sum = (short)(8 * ti + tj);
-                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
-                elems.Add(sum);
-                
-            }
-
-            ti = i;
-            tj = j;
-            Console.WriteLine("Checking axes");
-            //check up
-            while (tj > 0)
-            {
-                tj--;
-                sum = (short)(8 * ti + tj);
-                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
-                elems.Add(sum);
-                
-            }
-
-            ti = i;
-            tj = j;
-            //check down
-            while (tj < 7)
-            {
-                tj++;
-                sum = (short)(8 * ti + tj);
-                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
-                elems.Add(sum);
-                
-            }
-
-            ti = i;
-            tj = j;
-            //check left
-            while ( ti > 0 )
-            {
-                ti--;
-                sum = (short)(8 * ti + tj);
-                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
-                elems.Add(sum);
-                
-            }
-
-            ti = i;
-            tj = j;
-            //check right
-            while (ti < 7)
-            {
-                ti++;
-                sum = (short)(8 * ti + tj);
-                Console.WriteLine("8 * " + ti.ToString() + " + " + tj.ToString() + " = " + sum.ToString());
-                elems.Add(sum);
-                
-            }
-
-
-            //now elems should contain all the elements of those square that are in the queen's range.
-            Console.WriteLine("found " + elems.Capacity.ToString() + " elements in range.");
-            foreach( short s in elems)
-            {
-                Console.Write(s);
-                Console.Write(" ");
-            }
-            Console.WriteLine();
-            
-            foreach( short s in elems )
+            foreach (short s in elems)
             {
                 ((Square)squares[s]).inRange = true;
             }
             elems.Clear();
+            Invalidate();
+        }
+
+        private void ChangeLabelText()
+        {
+            DispNumQueens.Text = "You have " + numQueens.ToString() + " queens on the board.";
+        }
+
+        private void Clear_MouseClick(object sender, MouseEventArgs e)
+        {
+            //clear the board.
+            foreach( Square s in squares )
+            {
+                s.inRange = false;
+                s.queen = false;
+            }
+            numQueens = 0;
+            ChangeLabelText();
+            Invalidate();
+        }
+
+        private void Hints_CheckedChanged(object sender, EventArgs e)
+        {
+            //turn on the hints.
+            hints = true;
+
             Invalidate();
         }
     }
