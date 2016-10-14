@@ -35,7 +35,7 @@
             // 
             // Clear
             // 
-            this.Clear.Location = new System.Drawing.Point(100, 20);
+            this.Clear.Location = new System.Drawing.Point(100, 50);
             this.Clear.Name = "Clear";
             this.Clear.Size = new System.Drawing.Size(75, 23);
             this.Clear.TabIndex = 0;
@@ -46,7 +46,7 @@
             // Hints
             // 
             this.Hints.AutoSize = true;
-            this.Hints.Location = new System.Drawing.Point(10, 23);
+            this.Hints.Location = new System.Drawing.Point(10, 53);
             this.Hints.Name = "Hints";
             this.Hints.Size = new System.Drawing.Size(50, 17);
             this.Hints.TabIndex = 1;
@@ -57,7 +57,7 @@
             // DispNumQueens
             // 
             this.DispNumQueens.AutoSize = true;
-            this.DispNumQueens.Location = new System.Drawing.Point(250, 23);
+            this.DispNumQueens.Location = new System.Drawing.Point(250, 53);
             this.DispNumQueens.Name = "DispNumQueens";
             this.DispNumQueens.Size = new System.Drawing.Size(166, 13);
             this.DispNumQueens.TabIndex = 2;

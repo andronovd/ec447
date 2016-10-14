@@ -52,7 +52,7 @@ namespace Lab4
             SolidBrush fill = new SolidBrush(Color.White);
             SolidBrush Q = new SolidBrush(Color.Black);
 
-            for ( short i = 0; i < 7; i++ )
+            for ( short i = 0; i < size; i++ )
             {
                 for( short j = 0; j < size; j++ )
                 {
@@ -63,7 +63,7 @@ namespace Lab4
                     //if color is 0
                     fill.Color = Color.White;
                     Q.Color = Color.Black;
-
+                    
                     if (s.inRange == true && hints)
                     {
                         fill.Color = Color.Red;
@@ -143,10 +143,24 @@ namespace Lab4
                 Square s = (Square)squares[elem]; //get the square
                 if (e.Button == MouseButtons.Left)
                 {
-                    s.placeQueen(); //put the queen on the square
-                    queens.Add(elem); // add that element to the queen's arraylist
-                    numQueens++;
-                    ChangeLabelText();
+                    if (s.inRange)
+                    {
+                        //if the button has queen there or is in range of a queen
+                        System.Media.SystemSounds.Beep.Play();
+                    }
+                    else
+                    {
+                        s.placeQueen(); //put the queen on the square
+                        queens.Add(elem); // add that element to the queen's arraylist
+                        numQueens++;
+                        ChangeLabelText();
+                        CheckQueens(); //see which squares are in range of the queens on the board;
+                        Invalidate();
+                        if( numQueens == 8 )
+                        {
+                            Congradulate();
+                        }
+                    }
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
@@ -154,9 +168,9 @@ namespace Lab4
                     queens.Remove(elem);
                     numQueens--;
                     ChangeLabelText();
+                    CheckQueens(); //see which squares are in range of the queens on the board;
+                    Invalidate();
                 }
-                CheckQueens(); //see which squares are in range of the queens on the board;
-                Invalidate();
             }
         }
 
@@ -219,7 +233,7 @@ namespace Lab4
                 ti = i;
                 tj = j;
 
-                ////Console.WriteLine("elem selected is at " + i.ToString() + ", " + j.ToString());
+                Console.WriteLine("Currently looking at square " + elem.ToString());
 
                 //check up & left
                 //Console.WriteLine("Checking diagonals");
@@ -323,24 +337,23 @@ namespace Lab4
                 }
 
 
-                /* now elems should contain all the elements of those square that are in the queen's range.
-                //Console.WriteLine("found " + elems.Capacity.ToString() + " elements in range.");
+                /*now elems should contain all the elements of those square that are in the queen's range.
+                Console.WriteLine("found " + elems.Capacity.ToString() + " elements in range.");
                 foreach( short s in elems)
                 {
-                    //Console.Write(s);
-                    //Console.Write(" ");
+                    Console.Write(s);
+                    Console.Write(" ");
                 }
-                //Console.WriteLine();
+                Console.WriteLine();
                 */
-
-                
+                foreach (short s in elems)
+                {
+                    ((Square)squares[s]).inRange = true;
+                }
+                elems.Clear();
             }
 
-            foreach (short s in elems)
-            {
-                ((Square)squares[s]).inRange = true;
-            }
-            elems.Clear();
+            
             Invalidate();
         }
 
@@ -358,6 +371,7 @@ namespace Lab4
                 s.queen = false;
             }
             numQueens = 0;
+            queens.Clear();
             ChangeLabelText();
             Invalidate();
         }
@@ -365,9 +379,14 @@ namespace Lab4
         private void Hints_CheckedChanged(object sender, EventArgs e)
         {
             //turn on the hints.
-            hints = true;
-
+            hints = !hints;
             Invalidate();
+        }
+
+        private void Congradulate()
+        {
+            MessageBox.Show("You did it!");
+            return;
         }
     }
 }
