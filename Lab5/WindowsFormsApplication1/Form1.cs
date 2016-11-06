@@ -54,10 +54,8 @@ namespace WindowsFormsApplication1
         //drawing options
         short dopt = 0;
 
-
-
-
-
+        
+//--ProgramClass--//
         public Lab5()
         {
             InitializeComponent();
@@ -139,7 +137,7 @@ namespace WindowsFormsApplication1
             public Point loc1; //location of the 1st corner
             public Point loc2; //location of the 2nd corner
             public Pen gpen; //its color
-            public Brushes gbrush;
+            public Brush gbrush;
             public short gdopt;
 
             public graphic()
@@ -166,12 +164,12 @@ namespace WindowsFormsApplication1
                 //true if p2
                 if ((p1.X <= p2.X) && (p1.Y <= p2.Y))
                 {
-                    Console.WriteLine(p1.ToString() + " is upper left of " + p2.ToString());
+                    //Console.WriteLine(p1.ToString() + " is upper left of " + p2.ToString());
                     return true;
                 }
                 else
                 {
-                    Console.WriteLine(p2.ToString() + " is upper left of " + p1.ToString());
+                    //Console.WriteLine(p2.ToString() + " is upper left of " + p1.ToString());
                     return false;
                 }
             }
@@ -204,7 +202,7 @@ namespace WindowsFormsApplication1
             public Point loc; //location of the upper left corner
 
             public Rect() { }
-            public Rect(Point loc1, Point loc2, Pen p, Brushes b, short options)
+            public Rect(Point loc1, Point loc2, Pen p, Brush b, short options)
             {
                 this.loc1 = loc1;
                 this.loc2 = loc2;
@@ -217,7 +215,7 @@ namespace WindowsFormsApplication1
             {
                 width = Math.Abs(loc1.X - loc2.X);
                 height = Math.Abs(loc1.Y - loc2.Y);
-                Rectangle r = new Rectangle(loc.X, loc.Y, width, height);
+                
                 if (isUpperCorner(loc1, loc2))
                 {
                     loc = loc1;
@@ -227,13 +225,14 @@ namespace WindowsFormsApplication1
                     loc = loc2;
                 }
 
+                Rectangle r = new Rectangle(loc.X, loc.Y, width, height);
                 if (gdopt == 1)
                 {
-                    g.DrawRectangle(this.gpen, r);
+                    g.FillRectangle(this.gbrush, r);
                 }
                 else if (gdopt == 2)
                 {
-                    g.FillRectangle(this.gbrush, r);
+                    g.DrawRectangle(this.gpen, r);
                 }
                 else if (gdopt == 3)
                 {
@@ -254,11 +253,12 @@ namespace WindowsFormsApplication1
             public Point loc; //location of the upper left corner
 
             public Elip() { }
-            public Elip(Point loc1, Point loc2, Pen p, short options)
+            public Elip(Point loc1, Point loc2, Pen p, Brush b, short options)
             {
                 this.loc1 = loc1;
                 this.loc2 = loc2;
                 this.gpen = (Pen)p.Clone();
+                this.gbrush = b;
                 this.gdopt = options;
             }
 
@@ -266,7 +266,6 @@ namespace WindowsFormsApplication1
             {
                 width = Math.Abs(loc1.X - loc2.X);
                 height = Math.Abs(loc1.Y - loc2.Y);
-                Rectangle r = new Rectangle(loc.X, loc.Y, width, height);
                 if ( isUpperCorner( loc1, loc2 ) )
                 {
                     loc = loc1;
@@ -276,13 +275,14 @@ namespace WindowsFormsApplication1
                     loc = loc2;
                 }
 
-                if( gdopt == 1 )
+                Rectangle r = new Rectangle(loc.X, loc.Y, width, height);
+                if ( gdopt == 1 )
                 {
-                    g.DrawEllipse(this.gpen, r);
+                    g.FillEllipse(this.gbrush, r);
                 }
                 else if( gdopt == 2 )
                 {
-                    g.FillEllipse(this.gbrush, r);
+                    g.DrawEllipse(this.gpen, r);
                 }
                 else if( gdopt == 3 )
                 {
@@ -296,18 +296,60 @@ namespace WindowsFormsApplication1
 
         public class textString : graphic
         {
+            public string tb_text;
+            public Point loc;
+            public Color c;
             //this is the line object
             public textString() { }
-            public textString(Point loc1, Point loc2, Pen p)
+            public textString(Point loc1, Point loc2, Color color, string s)
             {
                 this.loc1 = loc1;
                 this.loc2 = loc2;
-                this.gpen = (Pen)p.Clone();
+                this.tb_text = s;
+                this.c = color;
             }
 
+            public Brush getBrushColor()
+            {
+                //gets the brush color to draw the drawing
+                Console.WriteLine("color is " + c.ToString());
+                Brush b = Brushes.Black;
+                if (c == Color.Blue )
+                {
+                    b = Brushes.Blue;
+                }
+                else if (c == Color.Green )
+                {
+                    b = Brushes.Green;
+                }
+                else if (c == Color.Red )
+                {
+                    b = Brushes.Red;
+                }
+                Console.WriteLine("string brush color is " + b.ToString());
+                return b;
+            }
             override public void Draw(Graphics g)
             {
-                //g.DrawString(this.gpen, loc1, loc2);
+                //if string is empty, do nothing
+                if( tb_text == "" )
+                {
+                    Console.WriteLine("tbstring is empty, doing nothing");
+                    return;
+                }
+                int width = Math.Abs(loc1.X - loc2.X);
+                int height = Math.Abs(loc1.Y - loc2.Y);
+                if (isUpperCorner(loc1, loc2))
+                {
+                    loc = loc1;
+                }
+                else
+                {
+                    loc = loc2;
+                }
+
+                Rectangle r = new Rectangle(loc.X, loc.Y, width, height);
+                g.DrawString(tb_text, DefaultFont, getBrushColor(), r);
             }
         }
 
@@ -322,7 +364,7 @@ namespace WindowsFormsApplication1
                 {
                     c2.X = e.X;
                     c2.Y = e.Y;
-                    Console.WriteLine("The second corner is at " + c2.ToString());
+                    //Console.WriteLine("The second corner is at " + c2.ToString());
                     //this is the second click, need to create the objects and add it to the list
                     createGrpc(); 
                     draw_panel.Invalidate();
@@ -332,7 +374,7 @@ namespace WindowsFormsApplication1
                     //else this is the first click
                     c1.X = e.X;
                     c1.Y = e.Y;
-                    Console.WriteLine("The first corner is at " + c1.ToString());
+                    //Console.WriteLine("The first corner is at " + c1.ToString());
                 } 
             }
         }
@@ -341,7 +383,7 @@ namespace WindowsFormsApplication1
         private void Clear()
         {
             //this clears the canvas, the graphics object queue, and resets the mouse state variable
-            Console.WriteLine("Clearing Canvas, reseting mouse and emptying arraylist");
+            //Console.WriteLine("Clearing Canvas, reseting mouse and emptying arraylist");
             mstate = true;
             grry.Clear();
             draw_panel.Invalidate();
@@ -366,6 +408,7 @@ namespace WindowsFormsApplication1
             gtype = 1;
         }
 
+        //Radiobutton click handlers
         private void rect_MouseClick(object sender, MouseEventArgs e)
         {
             //type -> 2, draw rectangles
@@ -397,21 +440,24 @@ namespace WindowsFormsApplication1
                 grry.Add(l);
 
             }
-            else if (gtype == 2)
+            else if (gtype == 2 && dopt != 0)
             {
                 //create a rectangle
                 Rect r = new Rect(c1, c2, pen, brush, dopt);
                 grry.Add(r);
             }
-            else if (gtype == 3)
+            else if (gtype == 3 && dopt != 0)
             {
                 //create an ellipse
-                Elip e = new Elip(c1, c2, pen, dopt);
+                Elip e = new Elip(c1, c2, pen, brush, dopt);
+                grry.Add(e);
                  
             }
             else if (gtype == 4)
             {
                 //create some text
+                textString ts = new textString(c1, c2, pen.Color, tb_text);
+                grry.Add(ts);
             }
         }
 
@@ -443,31 +489,30 @@ namespace WindowsFormsApplication1
         private void fill_colors_SelectedIndexChanged(object sender, EventArgs e)
         {
             //set the fill color
-            /*
+            
             int i = fill_colors.SelectedIndex;
             if (i == 0)
             {
-                pen.Color = Color.White;
+                brush = Brushes.White;
             }
             else if (i == 1)
             {
-                pen.Color = Color.Black;
+                brush = Brushes.Black;
             }
             else if (i == 2)
             {
-                pen.Color = Color.Red;
+                brush = Brushes.Red;
             }
             else if (i == 3)
             {
-                pen.Color = Color.Blue;
+                brush = Brushes.Blue;
             }
             else if (i == 4)
             {
-                pen.Color = Color.Green;
+                brush = Brushes.Green;
             }
-            */
             
-            string s = fill_colors.SelectedValue.ToString();
+            //string s = fill_colors.SelectedValue.ToString();
         }
 
         private void pen_widths_SelectedIndexChanged(object sender, EventArgs e)
@@ -508,6 +553,39 @@ namespace WindowsFormsApplication1
                 dopt &= 1;
             }
             Console.WriteLine("Dopt is now " + dopt.ToString());
+        }
+
+        private void tb_TextChanged(object sender, EventArgs e)
+        {
+            tb_text = tb.Text;
+            Console.WriteLine("text boxt text is now " + tb_text);
+        }
+
+        private void undo()
+        {
+            //undoes the last drawing by removing it from the end of the arraylist
+            int count = grry.Count;
+            //Console.WriteLine( "There are " + count.ToString() + "in the array" );
+            if (count == 0)
+            {
+                //do nothing
+                //Console.WriteLine("nothing was done.");
+                return;
+            }
+            else
+            {
+                //Console.WriteLine("Last element removed");
+                grry.RemoveAt(count - 1);
+                return;
+            }
+
+
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            undo();
+            draw_panel.Invalidate();
         }
     }
 }

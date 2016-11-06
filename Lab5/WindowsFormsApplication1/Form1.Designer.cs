@@ -32,7 +32,9 @@
             this.Outline = new System.Windows.Forms.CheckBox();
             this.Fill = new System.Windows.Forms.CheckBox();
             this.PenWidth = new System.Windows.Forms.Panel();
+            this.pen_widths = new System.Windows.Forms.ListBox();
             this.FillColor = new System.Windows.Forms.Panel();
+            this.fill_colors = new System.Windows.Forms.ListBox();
             this.PenColor = new System.Windows.Forms.Panel();
             this.pen_colors = new System.Windows.Forms.ListBox();
             this.draw_box = new System.Windows.Forms.GroupBox();
@@ -47,8 +49,6 @@
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fill_colors = new System.Windows.Forms.ListBox();
-            this.pen_widths = new System.Windows.Forms.ListBox();
             this.options_panel.SuspendLayout();
             this.PenWidth.SuspendLayout();
             this.FillColor.SuspendLayout();
@@ -102,6 +102,15 @@
             this.PenWidth.Size = new System.Drawing.Size(96, 165);
             this.PenWidth.TabIndex = 0;
             // 
+            // pen_widths
+            // 
+            this.pen_widths.FormattingEnabled = true;
+            this.pen_widths.Location = new System.Drawing.Point(17, 109);
+            this.pen_widths.Name = "pen_widths";
+            this.pen_widths.Size = new System.Drawing.Size(76, 56);
+            this.pen_widths.TabIndex = 5;
+            this.pen_widths.SelectedIndexChanged += new System.EventHandler(this.pen_widths_SelectedIndexChanged);
+            // 
             // FillColor
             // 
             this.FillColor.Controls.Add(this.fill_colors);
@@ -109,6 +118,15 @@
             this.FillColor.Name = "FillColor";
             this.FillColor.Size = new System.Drawing.Size(80, 100);
             this.FillColor.TabIndex = 0;
+            // 
+            // fill_colors
+            // 
+            this.fill_colors.FormattingEnabled = true;
+            this.fill_colors.Location = new System.Drawing.Point(23, 44);
+            this.fill_colors.Name = "fill_colors";
+            this.fill_colors.Size = new System.Drawing.Size(57, 56);
+            this.fill_colors.TabIndex = 4;
+            this.fill_colors.SelectedIndexChanged += new System.EventHandler(this.fill_colors_SelectedIndexChanged);
             // 
             // PenColor
             // 
@@ -148,6 +166,7 @@
             this.tb.Name = "tb";
             this.tb.Size = new System.Drawing.Size(190, 74);
             this.tb.TabIndex = 7;
+            this.tb.TextChanged += new System.EventHandler(this.tb_TextChanged);
             // 
             // text
             // 
@@ -230,7 +249,7 @@
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.Clear);
             // 
@@ -245,26 +264,9 @@
             // undoToolStripMenuItem
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.undoToolStripMenuItem.Text = "Undo";
-            // 
-            // fill_colors
-            // 
-            this.fill_colors.FormattingEnabled = true;
-            this.fill_colors.Location = new System.Drawing.Point(23, 44);
-            this.fill_colors.Name = "fill_colors";
-            this.fill_colors.Size = new System.Drawing.Size(57, 56);
-            this.fill_colors.TabIndex = 4;
-            this.fill_colors.SelectedIndexChanged += new System.EventHandler(this.fill_colors_SelectedIndexChanged);
-            // 
-            // pen_widths
-            // 
-            this.pen_widths.FormattingEnabled = true;
-            this.pen_widths.Location = new System.Drawing.Point(17, 109);
-            this.pen_widths.Name = "pen_widths";
-            this.pen_widths.Size = new System.Drawing.Size(76, 56);
-            this.pen_widths.TabIndex = 5;
-            this.pen_widths.SelectedIndexChanged += new System.EventHandler(this.pen_widths_SelectedIndexChanged);
+            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
             // Lab5
             // 

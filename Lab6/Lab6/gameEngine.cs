@@ -60,6 +60,18 @@ public class gameEngine
         return false;
     }
 
+    public void restart()
+    {
+        //restart the gameEngine
+        Console.WriteLine("Restarting game engine");
+        taken.Clear();
+        free.Clear();
+        for( short i = 0; i < 9; i++ )
+        {
+            free.Add(i);
+        }
+    }
+
     public short Move()
     {
         Random r = new Random();

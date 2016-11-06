@@ -72,6 +72,9 @@ namespace Lab6
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
+            //disable the computer moves first menu option
+            compStarts.Enabled = false;
+
             Graphics g = CreateGraphics();
             ApplyTransform(g);
             PointF[] p = { new Point(e.X, e.Y) };
@@ -85,19 +88,24 @@ namespace Lab6
             short spot = (short)(i + 3 * j);
             if( e.Button == MouseButtons.Left )
             {
+                //is the move legal?
                 bool isLegal = gE.isLegal((short)(i + 3 * j));
                 if (isLegal)
                 {
+                    //add the spot to the board
                     gE.add(spot);
-                    grid[i, j] = CellSelection.O;
+                    grid[i, j] = CellSelection.X;
+                    //is the game over after this move?
                     if (gE.isOver())
                     {
+                        Invalidate();
                         MessageBox.Show("Game Over");
                         return;
                     }
                 }
                 else
                 {
+                    //not a legal move
                     MessageBox.Show("That move is not legal!");
                 }
             }
@@ -113,9 +121,45 @@ namespace Lab6
             //unpack the move
             int i = compMove % 3;
             int j = (compMove - i) / 3;
-            grid[i, j] = CellSelection.X;
+            grid[i, j] = CellSelection.O;
+            //is the game over?
+            if (gE.isOver())
+            {
+                MessageBox.Show("Game Over");
+            }
             Invalidate();
             return;
+        }
+
+        private void compStarts_Click(object sender, EventArgs e)
+        {
+            //computer makes a move first
+            CompMove();
+
+            //disable the button afterwards
+            compStarts.Enabled = false;
+        }
+
+        private void newGame_Click(object sender, EventArgs e)
+        {
+            //start a new game
+            //clear the board
+            for( short i = 0; i < 3; i++ )
+            {
+                for( short j = 0; j < 3; j++ )
+                {
+                    grid[i, j] = CellSelection.N;
+                }
+            }
+
+            //restart the game engine
+            gE.restart();
+
+            //enable the computer moves first menu opt
+            compStarts.Enabled = true;
+
+            //invalidate
+            Invalidate();
         }
     }
 }
