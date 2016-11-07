@@ -26,7 +26,7 @@ namespace Lab6
         private float scale;
 
         //game engine
-        gameEngine gE = new gameEngine();
+        gEd0 gE = new gEd0();
         public Form1()
         {
             InitializeComponent();

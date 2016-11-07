@@ -5,8 +5,8 @@ using System.Collections;
 public class gameEngine
 {
     //data fields
-    private ArrayList taken;
-    private ArrayList free;
+    protected ArrayList taken;
+    protected ArrayList free;
 
     //function members
     public gameEngine()
@@ -72,7 +72,27 @@ public class gameEngine
         }
     }
 
-    public short Move()
+    public bool isWin()
+    {
+        //checks if the latest move was a win
+        return false;
+    }
+
+    virtual public short Move()
+    {
+        return 0;
+    }
+
+}
+
+public class gEd0 : gameEngine
+{
+    public gEd0()
+    {
+        Console.WriteLine("Creating game engine on 0 difficulty");
+    }
+
+    override public short Move()
     {
         Random r = new Random();
         short spot = (short)free[r.Next(free.Count)];
@@ -81,5 +101,4 @@ public class gameEngine
         Console.WriteLine("selected spot No.{0}", spot);
         return spot;
     }
-
 }
