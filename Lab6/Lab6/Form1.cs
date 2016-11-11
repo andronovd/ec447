@@ -93,10 +93,17 @@ namespace Lab6
                 if (isLegal)
                 {
                     //add the spot to the board
-                    gE.add(spot);
+                    gE.addOpMove(spot);
                     grid[i, j] = CellSelection.X;
+                    //is it a winning move?
+                    if( gE.isWin() )
+                    {
+                        Invalidate();
+                        MessageBox.Show("Congradulations, you win!");
+                        return;
+                    }
                     //is the game over after this move?
-                    if (gE.isOver())
+                    else if (gE.isOver())
                     {
                         Invalidate();
                         MessageBox.Show("Game Over");
@@ -107,6 +114,7 @@ namespace Lab6
                 {
                     //not a legal move
                     MessageBox.Show("That move is not legal!");
+                    return;
                 }
             }
             Invalidate();
@@ -122,12 +130,17 @@ namespace Lab6
             int i = compMove % 3;
             int j = (compMove - i) / 3;
             grid[i, j] = CellSelection.O;
+            Invalidate();
+            //is it a winning move?
+            if (gE.isWin())
+            {
+                MessageBox.Show("Whoops, you lost. Good game.");
+            }
             //is the game over?
-            if (gE.isOver())
+            else if (gE.isOver())
             {
                 MessageBox.Show("Game Over");
             }
-            Invalidate();
             return;
         }
 
