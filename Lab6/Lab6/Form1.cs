@@ -24,6 +24,7 @@ namespace Lab6
         private CellSelection[,] grid = new CellSelection[3, 3];
 
         private float scale;
+        private bool canMove = true;
 
         //game engine
         gEd0 gE = new gEd0();
@@ -86,7 +87,7 @@ namespace Lab6
 
             //only allow setting empty cells
             short spot = (short)(i + 3 * j);
-            if( e.Button == MouseButtons.Left )
+            if( e.Button == MouseButtons.Left & canMove )
             {
                 //is the move legal?
                 bool isLegal = gE.isLegal((short)(i + 3 * j));
@@ -100,6 +101,7 @@ namespace Lab6
                     {
                         Invalidate();
                         MessageBox.Show("Congradulations, you win!");
+                        canMove = false;
                         return;
                     }
                     //is the game over after this move?
@@ -107,6 +109,7 @@ namespace Lab6
                     {
                         Invalidate();
                         MessageBox.Show("Game Over");
+                        canMove = false;
                         return;
                     }
                 }
@@ -119,7 +122,10 @@ namespace Lab6
             }
             Invalidate();
             //now its the computer's turn
-            CompMove();
+            if (canMove)
+            {
+                CompMove();
+            }
         }
 
         private void CompMove()
@@ -135,11 +141,13 @@ namespace Lab6
             if (gE.isWin())
             {
                 MessageBox.Show("Whoops, you lost. Good game.");
+                canMove = false;
             }
             //is the game over?
             else if (gE.isOver())
             {
                 MessageBox.Show("Game Over");
+                canMove = false;
             }
             return;
         }
@@ -170,6 +178,7 @@ namespace Lab6
 
             //enable the computer moves first menu opt
             compStarts.Enabled = true;
+            canMove = true;
 
             //invalidate
             Invalidate();
