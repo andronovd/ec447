@@ -14,7 +14,7 @@ namespace lab_7
 {
     public partial class Form1 : Form
     {
-        public string filename;
+        public string filename = "";
         public string key_str;
         public byte[] key = new byte[8];
         public short key_ptr = 0;
@@ -30,6 +30,7 @@ namespace lab_7
         {
             filename = filename_tb.Text;
             Console.WriteLine("filename: {0}", filename);
+            bool b = isDes();
         }
 
         private void key_tb_TextChanged(object sender, EventArgs e)
@@ -64,18 +65,29 @@ namespace lab_7
                 i = (short)((i + 1) & 7);
             }
 
-            /*
+            
             Console.Write("key: ");
             foreach( byte b in key )
             {
                 Console.Write("{0}, ", b);
             }
             Console.WriteLine();
-            */
         }
 
         private void decrypt()
         {
+            //check if a file has been selected
+            if (filename == "")
+            {
+                MessageBox.Show("Please select a file to decrypt.");
+                return;
+            }
+            //check if there is a key
+            if ( key_check() )
+            {
+                MessageBox.Show("Please enter a key.");
+                return;
+            }
             //set up file streams an des encrypter
             //try to open the file
             FileStream encf = null;
@@ -86,11 +98,24 @@ namespace lab_7
             catch (Exception e)
             {
                 MessageBox.Show("Unable to open file");
+                return;
+            }
+
+            //check the file extension
+            if( isDes() )
+            {
+                MessageBox.Show("Please select a .des file to decrypt");
+                encf.Close();
+                return;
             }
 
             //open file for writing
+            //make the new file name
+            int last = filename.LastIndexOf(".");
+            string decrypt_name = filename.Substring(0, last);
+            Console.WriteLine("dcname: {0}", decrypt_name);
             //check if overwriting file
-            FileStream dest = new FileStream( filename + ".dec", FileMode.Create, FileAccess.Write);
+            FileStream dest = new FileStream( decrypt_name, FileMode.Create, FileAccess.Write);
             DES des = new DESCryptoServiceProvider();
             CryptoStream dencF = new CryptoStream(encf, des.CreateDecryptor(key, key), CryptoStreamMode.Read);
 
@@ -121,6 +146,18 @@ namespace lab_7
 
         private void encrypt()
         {
+            //check if a file has been selected
+            if( filename == "" )
+            {
+                MessageBox.Show("Please select a file to encrypt.");
+                return;
+            }
+            //check if the any key has been entered
+            if( key_check () )
+            {
+                MessageBox.Show("Please Enter a Key.");
+                return;
+            }
             //set up file streams an des encrypter
             //try to open the file
             FileStream f = null;
@@ -131,6 +168,7 @@ namespace lab_7
             catch( Exception e )
             {
                 MessageBox.Show("Unable to open file");
+                return;
             }
             
             //open file for writing
@@ -173,6 +211,32 @@ namespace lab_7
         private void dc_Click(object sender, EventArgs e)
         {
             decrypt();
+        }
+
+        private bool key_check()
+        {
+            //checks to see if the key is valid
+            foreach( byte b in key )
+            {
+                //Console.WriteLine( "{0}", b);
+                if( b != 0 )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool isDes( )
+        {
+            string[] split = filename.Split('.');
+            string extension = split[split.Length - 1];
+            Console.WriteLine(extension);
+            if (extension == "des")
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
