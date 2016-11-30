@@ -88,8 +88,21 @@ namespace lab_7
                 MessageBox.Show("Please enter a key.");
                 return;
             }
-            //set up file streams an des encrypter
-            //try to open the file
+
+            //open file for writing
+            //make the new file name
+            int last = filename.LastIndexOf(".");
+            string decrypt_name = filename.Substring(0, last);
+            Console.WriteLine("dcname: {0}", decrypt_name);
+            //check if overwriting file
+            if (File.Exists(decrypt_name))
+            {
+                fileOverwrite fo = new fileOverwrite();
+                if (fo.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
             FileStream encf = null;
             try
             {
@@ -108,40 +121,39 @@ namespace lab_7
                 encf.Close();
                 return;
             }
-
-            //open file for writing
-            //make the new file name
-            int last = filename.LastIndexOf(".");
-            string decrypt_name = filename.Substring(0, last);
-            Console.WriteLine("dcname: {0}", decrypt_name);
-            //check if overwriting file
-            FileStream dest = new FileStream( decrypt_name, FileMode.Create, FileAccess.Write);
+            
             DES des = new DESCryptoServiceProvider();
             CryptoStream dencF = new CryptoStream(encf, des.CreateDecryptor(key, key), CryptoStreamMode.Read);
 
-
+            int n;
             int fLen = (int)encf.Length;
+            int offset = 0;
             if (fLen == 0)
             {
                 Console.WriteLine("File is empty");
                 return;
             }
-            byte[] b = new byte[1];
-            int offset = 0;
-            do
+            byte[] b = new byte[fLen];
+            try
             {
-                dencF.Read(b, 0, 1);
-                dest.Write(b, 0, 1);
-                offset++;
-                fLen--;
-                Console.WriteLine("{0} bytes decrypted", offset);
+                n = dencF.Read(b, 0, b.Length);
             }
-            while (fLen > 0);
+            catch( Exception e )
+            {
+                //bad data error, wrong key
+                Console.WriteLine(e.Message);
+                MessageBox.Show("Bad data: wrong key");
+                encf.Close();
+                return;
+            }
 
+            FileStream dest = new FileStream(decrypt_name, FileMode.Create, FileAccess.Write);
+            dest.Write(b, 0, b.Length);
             //close the file streams
             encf.Close();
             dencF.Close();
             dest.Close();
+            return;
         }
 
         private void encrypt()
@@ -167,6 +179,7 @@ namespace lab_7
             }
             catch( Exception e )
             {
+                
                 MessageBox.Show("Unable to open file");
                 return;
             }
@@ -176,6 +189,7 @@ namespace lab_7
             FileStream dest = new FileStream(filename + ".des", FileMode.Create, FileAccess.Write);
             DES des = new DESCryptoServiceProvider();
             CryptoStream encF = new CryptoStream(dest, des.CreateEncryptor(key, key), CryptoStreamMode.Write);
+           
             
 
             int fLen = (int)f.Length;
@@ -184,19 +198,21 @@ namespace lab_7
                 Console.WriteLine("File is empty");
                 return;
             }
-            byte[] b = new byte[1];
-            int offset = 0;
+            byte[] b = new byte[fLen];
             int n;
+            int offset = 0;
             do
             {
-                n = f.Read(b, 0, 1);
-                encF.Write(b, 0, 1);
+                n = f.Read(b, offset, 1);
                 offset++;
                 fLen--;
                 Console.WriteLine("{0} bytes encrypted", offset);
             }
             while (fLen > 0);
 
+            encF.Write(b, 0, b.Length);
+
+            encF.FlushFinalBlock();
             //close the file streams
             encF.Close();
             f.Close();

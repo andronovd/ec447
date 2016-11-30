@@ -39,6 +39,10 @@
             this.dc = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Filter = "All Files|*.*|Encrypted Files|*.des";
+            // 
             // filename_label
             // 
             this.filename_label.AutoSize = true;
