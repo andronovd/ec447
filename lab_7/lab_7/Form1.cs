@@ -79,13 +79,13 @@ namespace lab_7
             //check if a file has been selected
             if (filename == "")
             {
-                MessageBox.Show("Please select a file to decrypt.");
+                MessageBox.Show("Please select a file to decrypt.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             //check if there is a key
             if ( key_check() )
             {
-                MessageBox.Show("Please enter a key.");
+                MessageBox.Show("Please enter a key.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -97,11 +97,13 @@ namespace lab_7
             //check if overwriting file
             if (File.Exists(decrypt_name))
             {
-                fileOverwrite fo = new fileOverwrite();
-                if (fo.ShowDialog() == DialogResult.Cancel)
+               
+                if(MessageBox.Show("Output file exists. Overwrite?", "File Exists", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.Cancel )
                 {
+                    //no overwriting today
                     return;
                 }
+                
             }
             FileStream encf = null;
             try
@@ -110,19 +112,20 @@ namespace lab_7
             }
             catch (Exception e)
             {
-                MessageBox.Show("Unable to open file");
+                MessageBox.Show("Unable to open source or destination file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             //check the file extension
             if( isDes() )
             {
-                MessageBox.Show("Please select a .des file to decrypt");
+                MessageBox.Show("Please select a .des file to decrypt","Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 encf.Close();
                 return;
             }
             
             DES des = new DESCryptoServiceProvider();
+            //des.Padding = PaddingMode.Zeros;
             CryptoStream dencF = new CryptoStream(encf, des.CreateDecryptor(key, key), CryptoStreamMode.Read);
 
             int n;
@@ -136,7 +139,15 @@ namespace lab_7
             byte[] b = new byte[fLen];
             try
             {
-                n = dencF.Read(b, 0, b.Length);
+                while (fLen > 0)
+                {
+                    n = dencF.Read(b, offset, 1);
+                    offset++;
+                    fLen--;
+                    Console.WriteLine("{0} bytes decrypted", offset);
+                }
+                Console.WriteLine("Data decrypted");
+                dencF.Close();
             }
             catch( Exception e )
             {
@@ -151,7 +162,6 @@ namespace lab_7
             dest.Write(b, 0, b.Length);
             //close the file streams
             encf.Close();
-            dencF.Close();
             dest.Close();
             return;
         }
@@ -180,7 +190,7 @@ namespace lab_7
             catch( Exception e )
             {
                 
-                MessageBox.Show("Unable to open file");
+                MessageBox.Show("Unable to open source or destination file");
                 return;
             }
             
@@ -188,6 +198,7 @@ namespace lab_7
             //check if overwriting file
             FileStream dest = new FileStream(filename + ".des", FileMode.Create, FileAccess.Write);
             DES des = new DESCryptoServiceProvider();
+            //des.Padding = PaddingMode.Zeros;
             CryptoStream encF = new CryptoStream(dest, des.CreateEncryptor(key, key), CryptoStreamMode.Write);
            
             
@@ -211,8 +222,6 @@ namespace lab_7
             while (fLen > 0);
 
             encF.Write(b, 0, b.Length);
-
-            encF.FlushFinalBlock();
             //close the file streams
             encF.Close();
             f.Close();
