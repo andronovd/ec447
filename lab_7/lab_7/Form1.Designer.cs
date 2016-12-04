@@ -63,15 +63,15 @@
             // 
             // filename_tb
             // 
-            this.filename_tb.Location = new System.Drawing.Point(45, 53);
+            this.filename_tb.Location = new System.Drawing.Point(45, 44);
             this.filename_tb.Name = "filename_tb";
-            this.filename_tb.Size = new System.Drawing.Size(175, 20);
+            this.filename_tb.Size = new System.Drawing.Size(337, 20);
             this.filename_tb.TabIndex = 2;
             this.filename_tb.TextChanged += new System.EventHandler(this.filename_tb_TextChanged);
             // 
             // key_tb
             // 
-            this.key_tb.Location = new System.Drawing.Point(45, 122);
+            this.key_tb.Location = new System.Drawing.Point(45, 103);
             this.key_tb.Name = "key_tb";
             this.key_tb.Size = new System.Drawing.Size(175, 20);
             this.key_tb.TabIndex = 3;
@@ -80,7 +80,7 @@
             // Browse
             // 
             this.Browse.Image = ((System.Drawing.Image)(resources.GetObject("Browse.Image")));
-            this.Browse.Location = new System.Drawing.Point(316, 45);
+            this.Browse.Location = new System.Drawing.Point(421, 45);
             this.Browse.Name = "Browse";
             this.Browse.Size = new System.Drawing.Size(38, 35);
             this.Browse.TabIndex = 4;
@@ -89,7 +89,7 @@
             // 
             // ec
             // 
-            this.ec.Location = new System.Drawing.Point(45, 168);
+            this.ec.Location = new System.Drawing.Point(45, 129);
             this.ec.Name = "ec";
             this.ec.Size = new System.Drawing.Size(75, 23);
             this.ec.TabIndex = 5;
@@ -99,7 +99,7 @@
             // 
             // dc
             // 
-            this.dc.Location = new System.Drawing.Point(145, 168);
+            this.dc.Location = new System.Drawing.Point(145, 129);
             this.dc.Name = "dc";
             this.dc.Size = new System.Drawing.Size(75, 23);
             this.dc.TabIndex = 6;
@@ -111,7 +111,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(475, 261);
+            this.ClientSize = new System.Drawing.Size(526, 213);
             this.Controls.Add(this.dc);
             this.Controls.Add(this.ec);
             this.Controls.Add(this.Browse);
