@@ -40,6 +40,7 @@
             this.openCollectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCollectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openF = new System.Windows.Forms.OpenFileDialog();
             this.buttonBox.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -50,6 +51,7 @@
             this.fileList.FormattingEnabled = true;
             this.fileList.Location = new System.Drawing.Point(61, 40);
             this.fileList.Name = "fileList";
+            this.fileList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.fileList.Size = new System.Drawing.Size(472, 69);
             this.fileList.TabIndex = 0;
             // 
@@ -73,6 +75,7 @@
             this.del.TabIndex = 3;
             this.del.Text = "Delete";
             this.del.UseVisualStyleBackColor = true;
+            this.del.Click += new System.EventHandler(this.del_Click);
             // 
             // add
             // 
@@ -82,6 +85,7 @@
             this.add.TabIndex = 2;
             this.add.Text = "Add";
             this.add.UseVisualStyleBackColor = true;
+            this.add.Click += new System.EventHandler(this.add_Click);
             // 
             // show
             // 
@@ -146,6 +150,10 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
+            // openF
+            // 
+            this.openF.Multiselect = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -183,6 +191,7 @@
         private System.Windows.Forms.ToolStripMenuItem openCollectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveCollectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog openF;
     }
 }
 
