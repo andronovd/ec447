@@ -95,6 +95,7 @@
             this.show.TabIndex = 4;
             this.show.Text = "Show";
             this.show.UseVisualStyleBackColor = true;
+            this.show.Click += new System.EventHandler(this.show_Click);
             // 
             // intervalLabel
             // 
@@ -111,6 +112,7 @@
             this.interval.Name = "interval";
             this.interval.Size = new System.Drawing.Size(62, 20);
             this.interval.TabIndex = 6;
+            this.interval.TextChanged += new System.EventHandler(this.interval_TextChanged);
             // 
             // menuStrip1
             // 

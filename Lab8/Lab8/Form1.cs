@@ -14,6 +14,8 @@ namespace Lab8
     public partial class Form1 : Form
     {
         public ArrayList bms = new ArrayList(); //holds the bit maps
+        public string str_int;
+        public int time;
 
         public Form1()
         {
@@ -56,6 +58,44 @@ namespace Lab8
                 fileList.Items.RemoveAt(fileList.SelectedIndex);
             }
             fileList.Invalidate();
+        }
+
+        private void interval_TextChanged(object sender, EventArgs e)
+        {
+            str_int = interval.Text;
+            Console.WriteLine("User entered interval value: <{0}>", str_int);
+            if( str_int == "")
+            {
+                return;
+            }
+
+            try
+            {
+                time = Convert.ToInt32(str_int);
+            }
+            catch( Exception ex )
+            {
+                Console.WriteLine("Caught Exception: {0}", ex.Message);
+                MessageBox.Show("Please enter an integer greater than 0", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if( time < 1 )
+            {
+                Console.WriteLine("Interval must be greater than 0");
+                MessageBox.Show("Interval must be greater than 0", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                interval.Text = "";
+                str_int = "";
+                time = 0;
+            }
+
+            Console.WriteLine("time set to {0}", time);
+            return;            
+        }
+
+        private void show_Click(object sender, EventArgs e)
+        {
+            //start the slide show
         }
     }
 }
