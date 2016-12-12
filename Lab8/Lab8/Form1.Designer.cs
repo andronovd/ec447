@@ -41,6 +41,8 @@
             this.saveCollectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openF = new System.Windows.Forms.OpenFileDialog();
+            this.openCol = new System.Windows.Forms.OpenFileDialog();
+            this.saveCol = new System.Windows.Forms.SaveFileDialog();
             this.buttonBox.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -139,12 +141,14 @@
             this.openCollectionToolStripMenuItem.Name = "openCollectionToolStripMenuItem";
             this.openCollectionToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.openCollectionToolStripMenuItem.Text = "Open Collection";
+            this.openCollectionToolStripMenuItem.Click += new System.EventHandler(this.open_col);
             // 
             // saveCollectionToolStripMenuItem
             // 
             this.saveCollectionToolStripMenuItem.Name = "saveCollectionToolStripMenuItem";
             this.saveCollectionToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.saveCollectionToolStripMenuItem.Text = "Save Collection";
+            this.saveCollectionToolStripMenuItem.Click += new System.EventHandler(this.save_col);
             // 
             // exitToolStripMenuItem
             // 
@@ -154,7 +158,17 @@
             // 
             // openF
             // 
+            this.openF.Filter = "Bitmaps (*.bmp, *.gif, *.jpg, *.png, *.tiff, *.exif) |*.bmp;*.gif;*.jpg;*.png;*.t" +
+    "iff;*.exif |All Files | *.*";
             this.openF.Multiselect = true;
+            // 
+            // openCol
+            // 
+            this.openCol.Filter = "Collections (*.pix)| *.pix |All Files | *.*";
+            // 
+            // saveCol
+            // 
+            this.saveCol.Filter = "Collections (*.pix)| *.pix |All Files | *.*";
             // 
             // Form1
             // 
@@ -193,6 +207,8 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openF;
         public System.Windows.Forms.ListBox fileList;
+        private System.Windows.Forms.OpenFileDialog openCol;
+        private System.Windows.Forms.SaveFileDialog saveCol;
     }
 }
 

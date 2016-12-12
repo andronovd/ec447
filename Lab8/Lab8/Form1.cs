@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections;
+using System.IO;
 
 namespace Lab8
 {
@@ -105,5 +106,72 @@ namespace Lab8
             f.start_slideshow();
             f.Hide();
         }
+        
+        
+        private void open_col(object sender, EventArgs e)
+        {
+            if (openCol.ShowDialog() == DialogResult.OK)
+            {
+                //open the file for reading
+                ArrayList lines = new ArrayList();
+                Console.WriteLine("trying to read file ");
+                try
+                {
+                    StreamReader f = new StreamReader(openCol.FileName);
+                    string line;
+                    while ((line = f.ReadLine()) != null)
+                    {
+                        Console.WriteLine(line);
+                        lines.Add(line);
+                    }
+                    f.Close();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Open colection failed: <{0}>", ex.Message);
+                    MessageBox.Show("Unable to read collections file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    f.Close();
+                    return;
+                }
+
+                Console.WriteLine("Clearing filelist and adding new pic list");
+                fileList.Items.Clear();
+                foreach( string s in lines )
+                {
+                    fileList.Items.Add(s);
+                }
+            }
+        }
+
+
+        private void save_col(object sender, EventArgs e)
+        {
+            //save the collection
+            if (saveCol.ShowDialog() == DialogResult.OK)
+            {
+                //save the contents of the list box to the file
+                try
+                {
+                    StreamWriter f = new StreamWriter(saveCol.FileName + ".pix");
+                    Console.WriteLine("Opened file stream for writing to <{0}>", saveCol.FileName + ".pix" );
+                    foreach (string s in fileList.Items)
+                    {
+                        Console.WriteLine("Writing line: <{0}>", s);
+                        f.WriteLine(s);
+                        f.Flush();
+                    }
+                    f.Close();
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Unable to write to destination file: <{0}>", ex.Message);
+                    MessageBox.Show("Unable to write to destinaiton file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    f.Close();
+                    return;
+                }
+            }
+        }
+        
     }
 }
