@@ -180,8 +180,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox fileList;
         private System.Windows.Forms.GroupBox buttonBox;
         private System.Windows.Forms.Button del;
         private System.Windows.Forms.Button add;
@@ -194,6 +192,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveCollectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openF;
+        public System.Windows.Forms.ListBox fileList;
     }
 }
 

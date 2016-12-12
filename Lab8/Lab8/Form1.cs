@@ -13,9 +13,11 @@ namespace Lab8
 {
     public partial class Form1 : Form
     {
-        public ArrayList bms = new ArrayList(); //holds the bit maps
+        public Bitmap slide;
+        public bool isImg = false;
         public string str_int;
-        public int time;
+        public int time = 0;
+        public ss f = new ss();
 
         public Form1()
         {
@@ -28,8 +30,6 @@ namespace Lab8
             {
                 foreach( string s in openF.FileNames )
                 {
-                    //check if a valid filetype
-
                     Console.WriteLine("Adding {0}.", s);
                     fileList.Items.Add(s);
                 }
@@ -95,7 +95,15 @@ namespace Lab8
 
         private void show_Click(object sender, EventArgs e)
         {
-            //start the slide show
+            if( time == 0 )
+            {
+                Console.WriteLine("Error: No interval given");
+                MessageBox.Show("No interval given", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            f.transferInfo(time, fileList.Items);
+            f.start_slideshow();
+            f.Hide();
         }
     }
 }
