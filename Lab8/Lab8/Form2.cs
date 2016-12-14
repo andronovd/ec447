@@ -18,29 +18,46 @@ namespace Lab8
         public System.Windows.Forms.ListBox.ObjectCollection fileList;
         public Bitmap slide;
         public string curr;
-        public bool init = false;
+        public bool isLast = false;
         public Font f;
+        public short counter = 0;
 
         public ss()
         {
             InitializeComponent();
         }
 
-        private void ss_Paint(object sender, PaintEventArgs e)
+        private async void ss_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            slide = new Bitmap(curr);
+            
             try
             {
+                slide = new Bitmap((string)fileList[counter]);
                 Console.WriteLine("trying to draw image: <{0}>", curr);
                 g.DrawImage(slide, 0, 0);
+                slide.Dispose();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                g.DrawString("Not an Image", Font, Brushes.Red, 0, 0);
+                Font f = new Font( "Arial", 24, FontStyle.Bold | FontStyle.Italic );
+                g.DrawString("Not an Image!", f, Brushes.Red, 0, 0);
+                f.Dispose();
             }
-            slide.Dispose();
+
+
+            counter++;
+            //wait 1 sec
+            await Task.Delay(time * 1000);
+
+            //see if at the end
+            if( counter == fileList.Count )
+            {
+                counter = 0;
+                this.Close();
+            }
+            Invalidate();
         }
 
         private void ss_KeyDown(object sender, KeyEventArgs e)
@@ -51,31 +68,6 @@ namespace Lab8
             }
         }
 
-        public void start_slideshow()
-        {
-            init = true;
-            //check if there are any files to show
-            if (this.fileList.Count == 0)
-            {
-                Console.WriteLine("No images to show ");
-                MessageBox.Show("No files to show", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            foreach (string s in this.fileList)
-            {
-                Console.WriteLine("Opening {0}", s);
-                curr = s;
-                this.ShowDialog();
-                Console.WriteLine("Starting timer for {0} sec.", time);
-                Thread.Sleep(time * 1000);
-                this.Hide();
-            }
-            
-            //start the slide show
-            //open the form in modal mode
-
-
-        }
         public void transferInfo ( int time, System.Windows.Forms.ListBox.ObjectCollection fileList )
         {
             this.time = time;

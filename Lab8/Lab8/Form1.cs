@@ -102,8 +102,15 @@ namespace Lab8
                 MessageBox.Show("No interval given", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            if (fileList.Items.Count == 0)
+            {
+                Console.WriteLine("No images to show ");
+                MessageBox.Show("No files to show", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             f.transferInfo(time, fileList.Items);
-            f.start_slideshow();
+            f.ShowDialog();
             f.Hide();
         }
         
