@@ -164,7 +164,7 @@
             // 
             // openCol
             // 
-            this.openCol.Filter = "Collections (*.pix)| *.pix |All Files | *.*";
+            this.openCol.Filter = "Collections (*.pix)| *.pix|All Files | *.*";
             // 
             // saveCol
             // 
